@@ -7,12 +7,13 @@ public class ControlingThePlayer : MonoBehaviour
     public float Acc, Inerty, brake;
     public bool StartDecreasing;
     public GameObject Pivot;
+    [SerializeField] bool TouchedTrack;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Track")
         {
-            
+            TouchedTrack = true;
         }
 
     }
@@ -68,6 +69,11 @@ public class ControlingThePlayer : MonoBehaviour
         RotatePivot();
 
         transform.localPosition += transform.right * Speed * Time.deltaTime;
+
+        // TouchLimit(val => val <= LeftLimit, 180 - Z_Rot, Adjustment, 0, Sphere.transform.position.x, ref TouchedLeft);
+        // TouchLimit(val => val >= -LeftLimit, 180 - Z_Rot, -Adjustment, 0, Sphere.transform.position.x, ref TouchedRight);
+        // TouchLimit(val => val <= BottomLimit, -Z_Rot, 0, Adjustment, Sphere.transform.position.y, ref TouchedDown);
+        // TouchLimit(val => val >= -BottomLimit, -Z_Rot, 0, -Adjustment, Sphere.transform.position.y, ref TouchedUp);
     }
 
     public Vector3 Rotate(KeyCode KeyCode1, KeyCode KeyCode2, Vector3 NewPoz_Rot)
@@ -137,4 +143,15 @@ public class ControlingThePlayer : MonoBehaviour
     {
         Pivot.gameObject.transform.eulerAngles = new Vector3(0, 0, Mathf.Abs(Speed) * -7.2f);
     }
+
+    // public void TouchLimit(Func<float, bool> condition, float NewZ_Rot, float Adjustment1, float Adjustment2, float Position, ref bool Touched)
+    // {
+    //     if (TouchedTrack)
+    //     {
+    //         Sphere.transform.position = new Vector3(Sphere.transform.position.x + Adjustment1,
+    //          Sphere.transform.position.y + Adjustment2, Sphere.transform.position.z);
+    //         Touched = true;
+    //         Z_Rot = NewZ_Rot;
+    //     }
+    // }
 }
