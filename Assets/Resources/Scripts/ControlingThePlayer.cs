@@ -43,7 +43,15 @@ public class ControlingThePlayer : MonoBehaviour
         }
 
         Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
-        Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, MaxSpeedNeg);
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow))
+        {
+            Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
+        }
+
+        else
+        {
+            Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, MaxSpeedNeg);
+        }
 
         Nitro();
 
