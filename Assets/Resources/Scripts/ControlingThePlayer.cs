@@ -7,6 +7,7 @@ public class ControlingThePlayer : MonoBehaviour
     public float Acc, Inerty, brake;
     public bool StartDecreasing;
     public GameObject Pivot;
+    [SerializeField]  bool Crashed;
 
     //[SerializeField] bool TouchedTrack;
 
@@ -15,10 +16,18 @@ public class ControlingThePlayer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Track")
+        if (other.tag == "HorrizontalCollider")
         {
             //TouchedTrack = true;
-            //transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
+            if (transform.eulerAngles.z > -120 && transform.eulerAngles.z < -70)
+            {
+                Crashed = true;
+            }
+            else
+            {
+                transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
+            }
+            
         }
 
     }
@@ -57,9 +66,12 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
+        if (!Crashed)
+        {
+            Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
+        }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow))
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
@@ -80,7 +92,7 @@ public class ControlingThePlayer : MonoBehaviour
         // TouchLimit(val => val <= BottomLimit, -Z_Rot, 0, Adjustment, Sphere.transform.position.y, ref TouchedDown);
         // TouchLimit(val => val >= -BottomLimit, -Z_Rot, 0, -Adjustment, Sphere.transform.position.y, ref TouchedUp);
 
-        TouchHorrizontalCollider();
+        //TouchHorrizontalCollider();
     }
 
     public Vector3 Rotate(KeyCode KeyCode1, KeyCode KeyCode2, Vector3 NewPoz_Rot)
@@ -163,7 +175,7 @@ public class ControlingThePlayer : MonoBehaviour
     // }
 
     public void TouchHorrizontalCollider()
-    {
+    {   
         for (int i = 0; i < HorrizontalCollider.transform.childCount; i++)
         {
             if (Vector3.Distance(transform.position, HorrizontalCollider.transform.GetChild(i).position) < DectectingDistance)
