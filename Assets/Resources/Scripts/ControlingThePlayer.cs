@@ -7,13 +7,18 @@ public class ControlingThePlayer : MonoBehaviour
     public float Acc, Inerty, brake;
     public bool StartDecreasing;
     public GameObject Pivot;
-    [SerializeField] bool TouchedTrack;
+
+    //[SerializeField] bool TouchedTrack;
+
+    [SerializeField] GameObject HorrizontalCollider;
+    [SerializeField] float DectectingDistance;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Track")
         {
-            TouchedTrack = true;
+            //TouchedTrack = true;
+            //transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
         }
 
     }
@@ -74,6 +79,8 @@ public class ControlingThePlayer : MonoBehaviour
         // TouchLimit(val => val >= -LeftLimit, 180 - Z_Rot, -Adjustment, 0, Sphere.transform.position.x, ref TouchedRight);
         // TouchLimit(val => val <= BottomLimit, -Z_Rot, 0, Adjustment, Sphere.transform.position.y, ref TouchedDown);
         // TouchLimit(val => val >= -BottomLimit, -Z_Rot, 0, -Adjustment, Sphere.transform.position.y, ref TouchedUp);
+
+        TouchHorrizontalCollider();
     }
 
     public Vector3 Rotate(KeyCode KeyCode1, KeyCode KeyCode2, Vector3 NewPoz_Rot)
@@ -154,4 +161,15 @@ public class ControlingThePlayer : MonoBehaviour
     //         Z_Rot = NewZ_Rot;
     //     }
     // }
+
+    public void TouchHorrizontalCollider()
+    {
+        for (int i = 0; i < HorrizontalCollider.transform.childCount; i++)
+        {
+            if (Vector3.Distance(transform.position, HorrizontalCollider.transform.GetChild(i).position) < DectectingDistance)
+            {
+                transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
+            }
+        }
+    }
 }
