@@ -7,7 +7,8 @@ public class ControlingThePlayer : MonoBehaviour
     public float Acc, Inerty, brake;
     public bool StartDecreasing;
     public GameObject Pivot;
-    [SerializeField]  bool Crashed;
+    [SerializeField] bool Crashed;
+    [SerializeField]  bool StartGoingBackwards;
 
     //[SerializeField] bool TouchedTrack;
 
@@ -18,8 +19,11 @@ public class ControlingThePlayer : MonoBehaviour
     {
         if (other.tag == "HorrizontalCollider")
         {
+            float z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
             //TouchedTrack = true;
-            if (transform.eulerAngles.z > -120 && transform.eulerAngles.z < -70)
+            if ( z > -120 && z < -70)
             {
                 Crashed = true;
             }
@@ -66,19 +70,31 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        if (!Crashed)
+        if (!Crashed && !StartGoingBackwards)
         {
             Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
         }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed)
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed && !StartGoingBackwards)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
 
-        else
+        else if (Crashed)
+        {
+            Speed = 0;
+            Crashed = false;
+            StartGoingBackwards = true;
+        }
+
+        else if (!StartGoingBackwards)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, MaxSpeedNeg);
+        }
+        
+        if (StartGoingBackwards)
+        {
+            CrashedCar();
         }
 
         Nitro();
@@ -175,7 +191,7 @@ public class ControlingThePlayer : MonoBehaviour
     // }
 
     public void TouchHorrizontalCollider()
-    {   
+    {
         for (int i = 0; i < HorrizontalCollider.transform.childCount; i++)
         {
             if (Vector3.Distance(transform.position, HorrizontalCollider.transform.GetChild(i).position) < DectectingDistance)
@@ -183,5 +199,10 @@ public class ControlingThePlayer : MonoBehaviour
                 transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
             }
         }
+    }
+    
+    public void CrashedCar()
+    {
+        Speed = Mathf.MoveTowards(Speed, -4, Acc * Time.deltaTime);
     }
 }
