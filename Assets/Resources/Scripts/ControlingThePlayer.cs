@@ -21,9 +21,9 @@ public class ControlingThePlayer : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "HorrizontalCollider")
+        if (other.tag == "DownHorrizontalCollider")
         {
-            
+
             float z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
@@ -32,6 +32,7 @@ public class ControlingThePlayer : MonoBehaviour
             {
                 Crashed = true;
             }
+
             else if (Speed > 2)
             {
                 if (z < -140)
@@ -46,7 +47,7 @@ public class ControlingThePlayer : MonoBehaviour
                 Current_RotZ = transform.eulerAngles.z;
                 PartialCrashed = true;
             }
-        
+
 
             else if (!PartialCrashed)
             {
@@ -57,6 +58,52 @@ public class ControlingThePlayer : MonoBehaviour
                 else
                 {
                     NewPoz_RotZ = transform.eulerAngles.z + 10;
+                }
+
+                Current_RotZ = transform.eulerAngles.z;
+                PartialCrashed = true;
+            }
+
+
+        }
+        
+        if (other.tag == "UpHorrizontalCollider")
+        {
+            
+            float z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+            //TouchedTrack = true;
+            if (z < 140 && z > 50)
+            {
+                Crashed = true;
+            }
+
+            else if (Speed > 2)
+            {
+                if (z > 140)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + 30;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - 30;
+                }
+
+                Current_RotZ = transform.eulerAngles.z;
+                PartialCrashed = true;
+            }
+
+
+            else if (!PartialCrashed)
+            {
+                if (z > 140)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + 10;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - 10;
                 }
 
                 Current_RotZ = transform.eulerAngles.z;
