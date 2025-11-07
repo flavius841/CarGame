@@ -3402,8 +3402,12 @@ MonoBehaviour:
   StartDecreasing: 0
   Pivot: {fileID: 1461915205}
   Crashed: 0
+  PartialCrashed: 0
+  StartGoingBackwards: 0
   HorrizontalCollider: {fileID: 1468699926}
   DectectingDistance: 1.31
+  NewPoz_RotZ: 0
+  Current_RotZ: 0
 --- !u!60 &870533811
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -7424,7 +7428,7 @@ GameObject:
   - component: {fileID: 1803579582}
   - component: {fileID: 1803579583}
   m_Layer: 0
-  m_Name: HorizontalCollider
+  m_Name: HorizontalTrigerCollider
   m_TagString: HorrizontalCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -23,20 +23,46 @@ public class ControlingThePlayer : MonoBehaviour
     {
         if (other.tag == "HorrizontalCollider")
         {
+            
             float z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
             //TouchedTrack = true;
-            if ( z > -140 && z < -50)
+            if (z > -140 && z < -50)
             {
                 Crashed = true;
             }
-            else
+            else if (Speed > 2)
             {
+                if (z < -140)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - 30;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + 30;
+                }
+
                 Current_RotZ = transform.eulerAngles.z;
-                NewPoz_RotZ = transform.eulerAngles.z + 30;
                 PartialCrashed = true;
             }
+        
+
+            else if (!PartialCrashed)
+            {
+                if (z < -140)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - 10;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + 10;
+                }
+
+                Current_RotZ = transform.eulerAngles.z;
+                PartialCrashed = true;
+            }
+            
             
         }
 
