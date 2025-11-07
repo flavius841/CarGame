@@ -8,12 +8,16 @@ public class ControlingThePlayer : MonoBehaviour
     public bool StartDecreasing;
     public GameObject Pivot;
     [SerializeField] bool Crashed;
+    [SerializeField] bool PartialCrashed;
     [SerializeField]  bool StartGoingBackwards;
 
     //[SerializeField] bool TouchedTrack;
 
     [SerializeField] GameObject HorrizontalCollider;
     [SerializeField] float DectectingDistance;
+    [SerializeField] float NewPoz_RotZ;
+    [SerializeField] float Current_RotZ;
+
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -23,13 +27,15 @@ public class ControlingThePlayer : MonoBehaviour
             if (z > 180) z -= 360;
 
             //TouchedTrack = true;
-            if ( z > -120 && z < -70)
+            if ( z > -140 && z < -50)
             {
                 Crashed = true;
             }
             else
             {
-                transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
+                Current_RotZ = transform.eulerAngles.z;
+                NewPoz_RotZ = transform.eulerAngles.z + 30;
+                PartialCrashed = true;
             }
             
         }
@@ -50,7 +56,7 @@ public class ControlingThePlayer : MonoBehaviour
             Slow(brake);
         }
 
-        if (!Input.GetKey(KeyCode.Space))
+        if (!Input.GetKey(KeyCode.Space) && !StartGoingBackwards)
         {
             Slow(Inerty);
         }
@@ -58,11 +64,16 @@ public class ControlingThePlayer : MonoBehaviour
         Speed_Rot_Neg = -RotationSpeed();
         Speed_Rot_Poz = RotationSpeed();
 
-        transform.eulerAngles = Rotate(KeyCode.D, KeyCode.RightArrow,
-            new Vector3(0, 0, Speed_Rot_Neg * Time.deltaTime));
+        if (!PartialCrashed)
+        {
+            transform.eulerAngles = Rotate(KeyCode.D, KeyCode.RightArrow,
+                new Vector3(0, 0, Speed_Rot_Neg * Time.deltaTime));
 
-        transform.eulerAngles = Rotate(KeyCode.A, KeyCode.LeftArrow,
-            new Vector3(0, 0, Speed_Rot_Poz * Time.deltaTime));
+            transform.eulerAngles = Rotate(KeyCode.A, KeyCode.LeftArrow,
+                new Vector3(0, 0, Speed_Rot_Poz * Time.deltaTime));
+        }
+
+        
 
         if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) ||
             Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
@@ -70,12 +81,12 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        if (!Crashed && !StartGoingBackwards)
+        if (!Crashed && !StartGoingBackwards && !PartialCrashed)
         {
             Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
         }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed && !StartGoingBackwards)
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed && !StartGoingBackwards && !PartialCrashed)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
@@ -91,10 +102,15 @@ public class ControlingThePlayer : MonoBehaviour
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, MaxSpeedNeg);
         }
-        
+
         if (StartGoingBackwards)
         {
             CrashedCar();
+        }
+        
+        if (PartialCrashed)
+        {
+            PartialCrashedCar();
         }
 
         Nitro();
@@ -200,9 +216,27 @@ public class ControlingThePlayer : MonoBehaviour
             }
         }
     }
-    
+
     public void CrashedCar()
     {
-        Speed = Mathf.MoveTowards(Speed, -4, Acc * Time.deltaTime);
+        Speed = Mathf.MoveTowards(Speed, -4, 6 * Time.deltaTime);
+
+        if (Speed <= -1)
+        {
+            StartGoingBackwards = false;
+        }
+    }
+    
+    public void PartialCrashedCar()
+    {
+        Speed = Mathf.MoveTowards(Speed, 0, 6 * Time.deltaTime);
+ 
+        Current_RotZ = Mathf.MoveTowards(Current_RotZ, NewPoz_RotZ, 700 * Time.deltaTime);
+        transform.eulerAngles = new Vector3(0, 0, Current_RotZ);
+
+        if (Speed == 0)
+        {
+            PartialCrashed = false;
+        }
     }
 }
