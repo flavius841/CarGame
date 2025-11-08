@@ -27,42 +27,46 @@ public class ControlingThePlayer : MonoBehaviour
             float z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
-            //TouchedTrack = true;
-            if (z > -140 && z < -50)
+            
+            if (z > -180 && z < 0)
             {
-                Crashed = true;
+                if (z > -140 && z < -50)
+                {
+                    Crashed = true;
+                }
+
+                else if (Speed > 2)
+                {
+                    if (z < -140)
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z - 30;
+                    }
+                    else
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z + 30;
+                    }
+
+                    Current_RotZ = transform.eulerAngles.z;
+                    PartialCrashed = true;
+                }
+
+
+                else if (!PartialCrashed)
+                {
+                    if (z < -140)
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z - 10;
+                    }
+                    else
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z + 10;
+                    }
+
+                    Current_RotZ = transform.eulerAngles.z;
+                    PartialCrashed = true;
+                }
             }
-
-            else if (Speed > 2)
-            {
-                if (z < -140)
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z - 30;
-                }
-                else
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z + 30;
-                }
-
-                Current_RotZ = transform.eulerAngles.z;
-                PartialCrashed = true;
-            }
-
-
-            else if (!PartialCrashed)
-            {
-                if (z < -140)
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z - 10;
-                }
-                else
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z + 10;
-                }
-
-                Current_RotZ = transform.eulerAngles.z;
-                PartialCrashed = true;
-            }
+            
 
 
         }
@@ -73,42 +77,50 @@ public class ControlingThePlayer : MonoBehaviour
             float z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
-            //TouchedTrack = true;
-            if (z < 140 && z > 50)
+            if (z < 180 && z > 0)
             {
-                Crashed = true;
+                if (z < 140 && z > 50)
+                {
+                    Crashed = true;
+                }
+
+                else if (Speed > 2)
+                {
+                    if (z > 140)
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z + 30;
+                    }
+                    else
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z - 30;
+                    }
+
+                    Current_RotZ = transform.eulerAngles.z;
+                    PartialCrashed = true;
+                }
+
+
+                else if (!PartialCrashed)
+                {
+                    if (z > 140)
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z + 10;
+                    }
+                    else
+                    {
+                        NewPoz_RotZ = transform.eulerAngles.z - 10;
+                    }
+
+                    Current_RotZ = transform.eulerAngles.z;
+                    PartialCrashed = true;
+                }
             }
 
-            else if (Speed > 2)
+            else
             {
-                if (z > 140)
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z + 30;
-                }
-                else
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z - 30;
-                }
-
-                Current_RotZ = transform.eulerAngles.z;
-                PartialCrashed = true;
+                
             }
-
-
-            else if (!PartialCrashed)
-            {
-                if (z > 140)
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z + 10;
-                }
-                else
-                {
-                    NewPoz_RotZ = transform.eulerAngles.z - 10;
-                }
-
-                Current_RotZ = transform.eulerAngles.z;
-                PartialCrashed = true;
-            }
+            
             
             
         }
@@ -299,17 +311,56 @@ public class ControlingThePlayer : MonoBehaviour
             StartGoingBackwards = false;
         }
     }
-    
+
     public void PartialCrashedCar()
     {
         Speed = Mathf.MoveTowards(Speed, 0, 6 * Time.deltaTime);
- 
+
         Current_RotZ = Mathf.MoveTowards(Current_RotZ, NewPoz_RotZ, 700 * Time.deltaTime);
         transform.eulerAngles = new Vector3(0, 0, Current_RotZ);
 
         if (Speed == 0)
         {
             PartialCrashed = false;
+        }
+    }
+    
+    public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1, float NewAngle2)
+    {
+        if (z > VerificationAngle1 && z < VerificationAngle2)
+        {
+            Crashed = true;
+        }
+
+        else if (Speed > 2)
+        {
+            if (z < VerificationAngle1)
+            {
+                NewPoz_RotZ = transform.eulerAngles.z - NewAngle1;
+            }
+            else
+            {
+                NewPoz_RotZ = transform.eulerAngles.z + NewAngle1;
+            }
+
+            Current_RotZ = transform.eulerAngles.z;
+            PartialCrashed = true;
+        }
+
+
+        else if (!PartialCrashed)
+        {
+            if (z < VerificationAngle1)
+            {
+                NewPoz_RotZ = transform.eulerAngles.z - NewAngle2;
+            }
+            else
+            {
+                NewPoz_RotZ = transform.eulerAngles.z + NewAngle2;
+            }
+
+            Current_RotZ = transform.eulerAngles.z;
+            PartialCrashed = true;
         }
     }
 }
