@@ -11,7 +11,8 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField] bool CrashedBack;
 
     [SerializeField] bool PartialCrashed;
-    [SerializeField]  bool StartGoingBackwards;
+    [SerializeField] bool StartGoingBackwards;
+    [SerializeField]  bool StartGoingForwards;
 
     //[SerializeField] bool TouchedTrack;
 
@@ -33,7 +34,7 @@ public class ControlingThePlayer : MonoBehaviour
             
             if (z > -180 && z < 0)
             {
-                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, CrashedFront);
+                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront);
             }
             
 
@@ -48,12 +49,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z < 180 && z > 0)
             {
-                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, CrashedFront);
+                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, ref CrashedFront);
             }
 
             else
             {
-                ColliderFunction(-120, -50, -30, -10, val => val > -40,  val => val < -2, CrashedBack);
+                ColliderFunction(-120, -50, -30, -10, val => val > -40,  val => val < -2, ref CrashedBack);
             }
             
             
@@ -76,7 +77,7 @@ public class ControlingThePlayer : MonoBehaviour
             Slow(brake);
         }
 
-        if (!Input.GetKey(KeyCode.Space) && !StartGoingBackwards)
+        if (!Input.GetKey(KeyCode.Space) && !StartGoingBackwards && !StartGoingForwards)
         {
             Slow(Inerty);
         }
@@ -101,12 +102,13 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        if (!CrashedFront && !StartGoingBackwards && !PartialCrashed)
+        if (!CrashedFront && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
         {
             Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
         }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !CrashedFront && !StartGoingBackwards && !PartialCrashed)
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow)
+            && !CrashedFront && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
@@ -118,6 +120,13 @@ public class ControlingThePlayer : MonoBehaviour
             StartGoingBackwards = true;
         }
 
+        else if (CrashedBack)
+        {
+            Speed = 0;
+            CrashedBack = false;
+            StartGoingForwards = true;
+        }
+
         else if (!StartGoingBackwards)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, MaxSpeedNeg);
@@ -125,7 +134,7 @@ public class ControlingThePlayer : MonoBehaviour
 
         if (StartGoingBackwards)
         {
-            CrashedCar();
+            CrashedFrontCar();
         }
         
         if (PartialCrashed)
@@ -237,7 +246,7 @@ public class ControlingThePlayer : MonoBehaviour
         }
     }
 
-    public void CrashedCar()
+    public void CrashedFrontCar()
     {
         Speed = Mathf.MoveTowards(Speed, -4, 6 * Time.deltaTime);
 
@@ -261,7 +270,7 @@ public class ControlingThePlayer : MonoBehaviour
     }
     
     public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1,
-        float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, bool Crashed)
+        float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, ref bool Crashed)
     {
         if (z > VerificationAngle1 && z < VerificationAngle2)
         {
