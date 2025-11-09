@@ -7,7 +7,9 @@ public class ControlingThePlayer : MonoBehaviour
     public float Acc, Inerty, brake;
     public bool StartDecreasing;
     public GameObject Pivot;
-    [SerializeField] bool Crashed;
+    [SerializeField] bool CrashedFront;
+    [SerializeField] bool CrashedBack;
+
     [SerializeField] bool PartialCrashed;
     [SerializeField]  bool StartGoingBackwards;
 
@@ -17,6 +19,7 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField] float DectectingDistance;
     [SerializeField] float NewPoz_RotZ;
     [SerializeField] float Current_RotZ;
+    private float z;
 
 
     void OnTriggerEnter2D(Collider2D other)
@@ -24,47 +27,13 @@ public class ControlingThePlayer : MonoBehaviour
         if (other.tag == "DownHorrizontalCollider")
         {
 
-            float z = transform.eulerAngles.z;
+            z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
             
             if (z > -180 && z < 0)
             {
-                if (z > -140 && z < -50)
-                {
-                    Crashed = true;
-                }
-
-                else if (Speed > 2)
-                {
-                    if (z < -140)
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z - 30;
-                    }
-                    else
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z + 30;
-                    }
-
-                    Current_RotZ = transform.eulerAngles.z;
-                    PartialCrashed = true;
-                }
-
-
-                else if (!PartialCrashed)
-                {
-                    if (z < -140)
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z - 10;
-                    }
-                    else
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z + 10;
-                    }
-
-                    Current_RotZ = transform.eulerAngles.z;
-                    PartialCrashed = true;
-                }
+                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, CrashedFront);
             }
             
 
@@ -74,51 +43,17 @@ public class ControlingThePlayer : MonoBehaviour
         if (other.tag == "UpHorrizontalCollider")
         {
             
-            float z = transform.eulerAngles.z;
+            z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
             if (z < 180 && z > 0)
             {
-                if (z < 140 && z > 50)
-                {
-                    Crashed = true;
-                }
-
-                else if (Speed > 2)
-                {
-                    if (z > 140)
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z + 30;
-                    }
-                    else
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z - 30;
-                    }
-
-                    Current_RotZ = transform.eulerAngles.z;
-                    PartialCrashed = true;
-                }
-
-
-                else if (!PartialCrashed)
-                {
-                    if (z > 140)
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z + 10;
-                    }
-                    else
-                    {
-                        NewPoz_RotZ = transform.eulerAngles.z - 10;
-                    }
-
-                    Current_RotZ = transform.eulerAngles.z;
-                    PartialCrashed = true;
-                }
+                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, CrashedFront);
             }
 
             else
             {
-                
+                ColliderFunction(-120, -50, -30, -10, val => val > -40,  val => val < -2, CrashedBack);
             }
             
             
@@ -166,20 +101,20 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        if (!Crashed && !StartGoingBackwards && !PartialCrashed)
+        if (!CrashedFront && !StartGoingBackwards && !PartialCrashed)
         {
             Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
         }
 
-        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !Crashed && !StartGoingBackwards && !PartialCrashed)
+        if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow) && !CrashedFront && !StartGoingBackwards && !PartialCrashed)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
 
-        else if (Crashed)
+        else if (CrashedFront)
         {
             Speed = 0;
-            Crashed = false;
+            CrashedFront = false;
             StartGoingBackwards = true;
         }
 
@@ -325,16 +260,17 @@ public class ControlingThePlayer : MonoBehaviour
         }
     }
     
-    public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1, float NewAngle2)
+    public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1,
+        float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, bool Crashed)
     {
         if (z > VerificationAngle1 && z < VerificationAngle2)
         {
             Crashed = true;
         }
 
-        else if (Speed > 2)
+        else if (condition2(Speed))
         {
-            if (z < VerificationAngle1)
+            if (condition1(z))
             {
                 NewPoz_RotZ = transform.eulerAngles.z - NewAngle1;
             }
@@ -350,7 +286,7 @@ public class ControlingThePlayer : MonoBehaviour
 
         else if (!PartialCrashed)
         {
-            if (z < VerificationAngle1)
+            if (condition1(z))
             {
                 NewPoz_RotZ = transform.eulerAngles.z - NewAngle2;
             }
