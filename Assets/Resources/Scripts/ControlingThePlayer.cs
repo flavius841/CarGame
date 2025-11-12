@@ -44,10 +44,9 @@ public class ControlingThePlayer : MonoBehaviour
 
 
         }
-        
+
         if (other.tag == "UpHorrizontalCollider")
         {
-            
             z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
@@ -58,11 +57,26 @@ public class ControlingThePlayer : MonoBehaviour
 
             else
             {
-                ColliderFunction(-120, -50, -30, -10, val => val > -40,  val => val < -2, ref CrashedBack);
+                ColliderFunction(-120, -50, -30, -10, val => val > -40, val => val < -2, ref CrashedBack);
             }
-            
-            
-            
+        }
+        
+        if (other.tag == "LeftVerticalCollider")
+        {
+            z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+            if (z < 90 && z > -90)
+            {
+                Debug.Log("Left Vertical Front");
+                ColliderFunction(-150, -130, -30, -10, val => val < -170, val => val > 2, ref CrashedFront);
+            }
+
+            else
+            {
+                ColliderFunction(10, 80, -30, -10, val => val < 10, val => val < -2, ref CrashedBack);
+            }
+
         }
 
     }
@@ -74,6 +88,15 @@ public class ControlingThePlayer : MonoBehaviour
 
     void Update()
     {
+        z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+        if (z < -90 && z > 90)
+        {
+            Debug.Log("Left Vertical Front");
+            
+        }
+            
         if (Input.GetKey(KeyCode.Space) || ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && Speed > 0)
          || ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && Speed < 0))
         {
@@ -294,7 +317,7 @@ public class ControlingThePlayer : MonoBehaviour
 
             Current_RotZ = transform.eulerAngles.z;
             PartialCrashed = true;
-        }
+        }               
 
 
         else if (!PartialCrashed)
