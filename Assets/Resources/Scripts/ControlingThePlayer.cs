@@ -14,7 +14,6 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField] bool StartGoingBackwards;
     [SerializeField]  bool StartGoingForwards;
 
-    //[SerializeField] bool TouchedTrack;
 
     [SerializeField] GameObject HorrizontalCollider;
     [SerializeField] float DectectingDistance;
@@ -31,10 +30,15 @@ public class ControlingThePlayer : MonoBehaviour
             z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
-            
+
             if (z > -180 && z < 0)
             {
                 ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront);
+            }
+
+            else
+            {
+                ColliderFunction(50, 120, 30, 10, val => val < 40, val => val < -2, ref CrashedBack);
             }
             
 
@@ -102,13 +106,13 @@ public class ControlingThePlayer : MonoBehaviour
             StartDecreasing = true;
         }
 
-        if (!CrashedFront && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
+        if (!CrashedFront && !CrashedBack && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
         {
             Moving(KeyCode.W, KeyCode.UpArrow, val => val >= 0, MaxSpeedPoz);
         }
 
         if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.UpArrow)
-            && !CrashedFront && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
+            && !CrashedFront && !CrashedBack && !StartGoingBackwards && !StartGoingForwards && !PartialCrashed)
         {
             Moving(KeyCode.S, KeyCode.DownArrow, val => val <= 0, -4);
         }
@@ -136,6 +140,11 @@ public class ControlingThePlayer : MonoBehaviour
         {
             CrashedFrontCar();
         }
+
+        if(StartGoingForwards)
+        {
+            CrashedBackCar();
+        }
         
         if (PartialCrashed)
         {
@@ -148,12 +157,6 @@ public class ControlingThePlayer : MonoBehaviour
 
         transform.localPosition += transform.right * Speed * Time.deltaTime;
 
-        // TouchLimit(val => val <= LeftLimit, 180 - Z_Rot, Adjustment, 0, Sphere.transform.position.x, ref TouchedLeft);
-        // TouchLimit(val => val >= -LeftLimit, 180 - Z_Rot, -Adjustment, 0, Sphere.transform.position.x, ref TouchedRight);
-        // TouchLimit(val => val <= BottomLimit, -Z_Rot, 0, Adjustment, Sphere.transform.position.y, ref TouchedDown);
-        // TouchLimit(val => val >= -BottomLimit, -Z_Rot, 0, -Adjustment, Sphere.transform.position.y, ref TouchedUp);
-
-        //TouchHorrizontalCollider();
     }
 
     public Vector3 Rotate(KeyCode KeyCode1, KeyCode KeyCode2, Vector3 NewPoz_Rot)
@@ -224,16 +227,7 @@ public class ControlingThePlayer : MonoBehaviour
         Pivot.gameObject.transform.eulerAngles = new Vector3(0, 0, Mathf.Abs(Speed) * -7.2f);
     }
 
-    // public void TouchLimit(Func<float, bool> condition, float NewZ_Rot, float Adjustment1, float Adjustment2, float Position, ref bool Touched)
-    // {
-    //     if (TouchedTrack)
-    //     {
-    //         Sphere.transform.position = new Vector3(Sphere.transform.position.x + Adjustment1,
-    //          Sphere.transform.position.y + Adjustment2, Sphere.transform.position.z);
-    //         Touched = true;
-    //         Z_Rot = NewZ_Rot;
-    //     }
-    // }
+
 
     public void TouchHorrizontalCollider()
     {
@@ -253,6 +247,16 @@ public class ControlingThePlayer : MonoBehaviour
         if (Speed <= -1)
         {
             StartGoingBackwards = false;
+        }
+    }
+
+    public void CrashedBackCar()
+    {
+        Speed = Mathf.MoveTowards(Speed, 4, 6 * Time.deltaTime);
+
+        if (Speed >= 1)
+        {
+            StartGoingForwards = false;
         }
     }
 
