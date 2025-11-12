@@ -19,7 +19,7 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField] float DectectingDistance;
     [SerializeField] float NewPoz_RotZ;
     [SerializeField] float Current_RotZ;
-    private float z;
+    [SerializeField] float z;
 
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,12 +33,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z > -180 && z < 0)
             {
-                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront);
+                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront, false);
             }
 
             else
             {
-                ColliderFunction(50, 120, 30, 10, val => val < 40, val => val < -2, ref CrashedBack);
+                ColliderFunction(50, 120, 30, 10, val => val < 40, val => val < -2, ref CrashedBack, false);
             }
             
 
@@ -52,12 +52,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z < 180 && z > 0)
             {
-                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, ref CrashedFront);
+                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, ref CrashedFront, false);
             }
 
             else
             {
-                ColliderFunction(-120, -50, -30, -10, val => val > -40, val => val < -2, ref CrashedBack);
+                ColliderFunction(-120, -50, -30, -10, val => val > -40, val => val < -2, ref CrashedBack, false);
             }
         }
         
@@ -66,15 +66,14 @@ public class ControlingThePlayer : MonoBehaviour
             z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
-            if (z < 90 && z > -90)
+            if (z > 90 || (z < -90 && z > -180))
             {
-                Debug.Log("Left Vertical Front");
-                ColliderFunction(-150, -130, -30, -10, val => val < -170, val => val > 2, ref CrashedFront);
+                ColliderFunction(140, -180, -30, -10, val => val < 180, val => val > 2, ref CrashedFront, true);
             }
 
             else
             {
-                ColliderFunction(10, 80, -30, -10, val => val < 10, val => val < -2, ref CrashedBack);
+                ColliderFunction(-40, 40, -30, -10, val => val < 10, val => val < -2, ref CrashedBack, false);
             }
 
         }
@@ -91,10 +90,9 @@ public class ControlingThePlayer : MonoBehaviour
         z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
 
-        if (z < -90 && z > 90)
+        if (z > -40 && z < 40)
         {
             Debug.Log("Left Vertical Front");
-            
         }
             
         if (Input.GetKey(KeyCode.Space) || ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && Speed > 0)
@@ -297,27 +295,37 @@ public class ControlingThePlayer : MonoBehaviour
     }
     
     public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1,
-        float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, ref bool Crashed)
+        float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, ref bool Crashed, bool CrashedVerticalColliderfront)
     {
-        if (z > VerificationAngle1 && z < VerificationAngle2)
+        if (z > VerificationAngle1 && z < VerificationAngle2 && !CrashedVerticalColliderfront)
+        {
+            Crashed = true;
+        }
+
+        else if ((z > VerificationAngle1 || (z <  -VerificationAngle1 && z > VerificationAngle2)) && CrashedVerticalColliderfront)
         {
             Crashed = true;
         }
 
         else if (condition2(Speed))
         {
-            if (condition1(z))
+            if (condition1(z) && !CrashedVerticalColliderfront)
             {
                 NewPoz_RotZ = transform.eulerAngles.z - NewAngle1;
             }
-            else
+            else if (!CrashedVerticalColliderfront)
             {
                 NewPoz_RotZ = transform.eulerAngles.z + NewAngle1;
             }
 
+            if (CrashedVerticalColliderfront)
+            {
+                
+            }
+
             Current_RotZ = transform.eulerAngles.z;
             PartialCrashed = true;
-        }               
+        }
 
 
         else if (!PartialCrashed)
