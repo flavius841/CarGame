@@ -33,12 +33,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z > -180 && z < 0)
             {
-                ColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront, false);
+                StraightColliderFunction(-140, -50, 30, 10, val => val < -140, val => val > 2, ref CrashedFront, false, false);
             }
 
             else
             {
-                ColliderFunction(50, 120, 30, 10, val => val < 40, val => val < -2, ref CrashedBack, false);
+                StraightColliderFunction(50, 120, 30, 10, val => val < 40, val => val < -2, ref CrashedBack, false, false);
             }
             
 
@@ -52,12 +52,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z < 180 && z > 0)
             {
-                ColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, ref CrashedFront, false);
+                StraightColliderFunction(50, 140, -30, -10, val => val > 140, val => val > 2, ref CrashedFront, false, false);
             }
 
             else
             {
-                ColliderFunction(-120, -50, -30, -10, val => val > -40, val => val < -2, ref CrashedBack, false);
+                StraightColliderFunction(-120, -50, -30, -10, val => val > -40, val => val < -2, ref CrashedBack, false, false);
             }
         }
 
@@ -68,16 +68,16 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z > 90 || (z < -90 && z > -180))
             {
-                ColliderFunction(140, -180, -30, 10, val => val < 180, val => val > 2, ref CrashedFront, true);
+                StraightColliderFunction(140, -180, -30, -10, val => val < 180, val => val > 2, ref CrashedFront, true, false);
             }
 
             else
             {
-                ColliderFunction(-40, 40, 30, -10, val => val < 0, val => val < -2, ref CrashedBack, false);
+                StraightColliderFunction(-40, 40, 30, 10, val => val < 0, val => val < -2, ref CrashedBack, false, false);
             }
 
         }
-        
+
         if (other.tag == "RightVerticalCollider")
         {
             z = transform.eulerAngles.z;
@@ -85,14 +85,37 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z < 90 && z > -90)
             {
-                ColliderFunction(-30, 30, 30, -10, val => val < 0, val => val > 2, ref CrashedFront, false);
+                StraightColliderFunction(-30, 30, 30, 10, val => val < 0, val => val > 2, ref CrashedFront, false, false);
             }
 
             else
             {
-                ColliderFunction(-40, 40, -30, 10, val => val < 0, val => val < -2, ref CrashedBack, false);
+                StraightColliderFunction(-40, 40, -30, -10, val => val < 0, val => val < -2, ref CrashedBack, false, false);
             }
 
+        }
+        
+        if (other.tag == "UpLeftTurnColliderUp")
+        {
+            z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+            if (z < 140 && z > -20)
+            {
+                StraightColliderFunction(0, 90, -30, -10, val => val > 0, val => val > 2, ref CrashedFront, false, false);
+            }
+
+            // else if (z < 0 && z > -20)
+            // {
+            //     StraightColliderFunction(10, 20, 30, 10, val => val > 90, val => val > 2, ref CrashedFront, false);
+            // }
+
+            else
+            {
+                StraightColliderFunction(-180, -90, -30, -10, val => val > -180, val => val < -2, ref CrashedBack, false, true);
+            }
+
+            
         }
 
     }
@@ -310,10 +333,10 @@ public class ControlingThePlayer : MonoBehaviour
             PartialCrashed = false;
         }
     }
-    
-    public void ColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1,
+
+    public void StraightColliderFunction(float VerificationAngle1, float VerificationAngle2, float NewAngle1,
         float NewAngle2, Func<float, bool> condition1, Func<float, bool> condition2, ref bool Crashed,
-        bool CrashedVerticalColliderfront)
+        bool CrashedVerticalColliderfront, bool CrashedUpLeftTurnColliderUp)
     {
         if (z > VerificationAngle1 && z < VerificationAngle2 && !CrashedVerticalColliderfront)
         {
@@ -327,11 +350,11 @@ public class ControlingThePlayer : MonoBehaviour
 
         else if (condition2(Speed))
         {
-            if (condition1(z) && !CrashedVerticalColliderfront)
+            if (condition1(z) && !CrashedVerticalColliderfront && !CrashedUpLeftTurnColliderUp)
             {
                 NewPoz_RotZ = transform.eulerAngles.z - NewAngle1;
             }
-            else if (!CrashedVerticalColliderfront)
+            else if (!CrashedVerticalColliderfront && !CrashedUpLeftTurnColliderUp)
             {
                 NewPoz_RotZ = transform.eulerAngles.z + NewAngle1;
             }
@@ -348,6 +371,18 @@ public class ControlingThePlayer : MonoBehaviour
                 }
             }
 
+            else if (CrashedUpLeftTurnColliderUp)
+            {
+                if (z > -180 && z < -50)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - NewAngle1;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + NewAngle1;
+                }
+            }
+
             Current_RotZ = transform.eulerAngles.z;
             PartialCrashed = true;
 
@@ -356,13 +391,13 @@ public class ControlingThePlayer : MonoBehaviour
 
         else if (!PartialCrashed)
         {
-            if (condition1(z) && !CrashedVerticalColliderfront)
-            {
-                NewPoz_RotZ = transform.eulerAngles.z + NewAngle2;
-            }
-            else if (!CrashedVerticalColliderfront)
+            if (condition1(z) && !CrashedVerticalColliderfront && !CrashedUpLeftTurnColliderUp)
             {
                 NewPoz_RotZ = transform.eulerAngles.z - NewAngle2;
+            }
+            else if (!CrashedVerticalColliderfront && !CrashedUpLeftTurnColliderUp)
+            {
+                NewPoz_RotZ = transform.eulerAngles.z + NewAngle2;
             }
 
             else if (CrashedVerticalColliderfront)
@@ -375,15 +410,30 @@ public class ControlingThePlayer : MonoBehaviour
                 {
                     NewPoz_RotZ = transform.eulerAngles.z + NewAngle2;
                 }
+            }
 
-               
+            else if (CrashedUpLeftTurnColliderUp)
+            {
+                if (z > -180 && z < -50)
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z - NewAngle2;
+                }
+                else
+                {
+                    NewPoz_RotZ = transform.eulerAngles.z + NewAngle2;
+                }
             }
 
 
         }
-        
-        Current_RotZ = transform.eulerAngles.z;
-            PartialCrashed = true;
 
+        Current_RotZ = transform.eulerAngles.z;
+        PartialCrashed = true;
+
+    }
+    
+    public void CurvedColliderFunction()
+    {
+        
     }
 }
