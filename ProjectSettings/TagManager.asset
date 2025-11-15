@@ -8,6 +8,8 @@ TagManager:
   - DownHorrizontalCollider
   - UpHorrizontalCollider
   - LeftVerticalCollider
+  - RightVerticalCollider
+  - UpLeftTurnCollider
   layers:
   - Default
   - TransparentFX
