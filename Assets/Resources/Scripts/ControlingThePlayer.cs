@@ -15,7 +15,6 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField]  bool StartGoingForwards;
 
 
-    [SerializeField] GameObject HorrizontalCollider;
     [SerializeField] float DectectingDistance;
     [SerializeField] float NewPoz_RotZ;
     [SerializeField] float Current_RotZ;
@@ -136,12 +135,12 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z > 40 && z < 135)
             {
-                ColliderFunction(-10, 10, 80, 30, val => val > 0, val => val > 2, ref CrashedFront, false, false, 0, 0);
+                ColliderFunction(-10, 10, 130, 30, val => val > 0, val => val > 2, ref CrashedFront, false, false, 0, 0);
             }
 
             else
             {
-                ColliderFunction(170, -180, -80, -30, val => val > -180, val => val < -2, ref CrashedBack, true, false, 0, 0);
+                ColliderFunction(170, -180, -130, -30, val => val > -180, val => val < -2, ref CrashedBack, true, false, 0, 0);
             }
         }
 
@@ -327,19 +326,6 @@ public class ControlingThePlayer : MonoBehaviour
     public void RotatePivot()
     {
         Pivot.gameObject.transform.eulerAngles = new Vector3(0, 0, Mathf.Abs(Speed) * -7.2f);
-    }
-
-
-
-    public void TouchHorrizontalCollider()
-    {
-        for (int i = 0; i < HorrizontalCollider.transform.childCount; i++)
-        {
-            if (Vector3.Distance(transform.position, HorrizontalCollider.transform.GetChild(i).position) < DectectingDistance)
-            {
-                transform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.z);
-            }
-        }
     }
 
     public void CrashedFrontCar()
