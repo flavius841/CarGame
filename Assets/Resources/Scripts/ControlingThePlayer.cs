@@ -120,15 +120,29 @@ public class ControlingThePlayer : MonoBehaviour
 
             if (z > -180 && z < -90)
             {
-                ColliderFunction(-150, -130, 30, 10, val => val  > 0, val => val > 2, ref CrashedFront, false, true, 90, 180);
+                ColliderFunction(-150, -130, 100, 40, val => val  > 0, val => val > 2, ref CrashedFront, false, true, 90, 180);
             }
 
             else
             {
-                ColliderFunction(20, 40, 30, 10, val => val < 0, val => val < -2, ref CrashedBack, false, false, 0, 0);
+                ColliderFunction(20, 40, 100, 40, val => val < 0, val => val < -2, ref CrashedBack, false, false, 0, 0);
+            }
+        }
+
+        if (other.tag == "UpTurnDownCollider")
+        {
+            z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+            if (z > 40 && z < 135)
+            {
+                ColliderFunction(-10, 10, 80, 30, val => val > 0, val => val > 2, ref CrashedFront, false, false, 0, 0);
             }
 
-
+            else
+            {
+                ColliderFunction(170, -180, -80, -30, val => val > -180, val => val < -2, ref CrashedBack, true, false, 0, 0);
+            }
         }
 
     }
@@ -416,8 +430,4 @@ public class ControlingThePlayer : MonoBehaviour
 
     }
     
-    public void CurvedColliderFunction()
-    {
-        
-    }
 }
