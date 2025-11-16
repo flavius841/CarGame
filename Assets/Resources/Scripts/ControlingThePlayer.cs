@@ -145,6 +145,24 @@ public class ControlingThePlayer : MonoBehaviour
             }
         }
 
+        if (other.tag == "UpTurnUpCollider")
+        {
+            z = transform.eulerAngles.z;
+            if (z > 180) z -= 360;
+
+            // if (z < -130 || (z > 50 && z < 180))
+            if (Speed > 0)
+            {
+                ColliderFunction(120, 140, -130, -30, val => val < 0, val => val < 2, ref CrashedFront, false, true, 50, 140);
+            }
+
+            else
+            {
+                ColliderFunction(-50, -30, 80, 30, val => val < -40, val => val > -2, ref CrashedBack, false, false, 0, 0);
+            }
+            
+        }
+
     }
 
     void Start()

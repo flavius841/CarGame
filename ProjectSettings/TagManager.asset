@@ -13,6 +13,7 @@ TagManager:
   - UpLeftTurnColliderDown
   - DownLeftTurnCollider
   - UpTurnDownCollider
+  - UpTurnUpCollider
   layers:
   - Default
   - TransparentFX
