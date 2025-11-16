@@ -145,7 +145,7 @@ public class ControlingThePlayer : MonoBehaviour
             }
         }
 
-        if (other.tag == "UpTurnUpCollider")
+        if (other.tag == "UpTurnUpCollider") // Not working properly
         {
             z = transform.eulerAngles.z;
             if (z > 180) z -= 360;
