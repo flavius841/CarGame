@@ -15,7 +15,6 @@ public class ControlingThePlayer : MonoBehaviour
     [SerializeField]  bool StartGoingForwards;
 
 
-    [SerializeField] float DectectingDistance;
     [SerializeField] float NewPoz_RotZ;
     [SerializeField] float Current_RotZ;
     [SerializeField] float z;
@@ -89,7 +88,7 @@ public class ControlingThePlayer : MonoBehaviour
 
             else
             {
-                ColliderFunction(-40, 40, -30, -10, val => val < 0, val => val < -2, ref CrashedBack, false, false, 0, 0);
+                ColliderFunction(160, -180, -30, -10, val => val < 0, val => val < -2, ref CrashedBack, true, false, 0, 0);
             }
 
         }
