@@ -4590,6 +4590,7 @@ GameObject:
   - component: {fileID: 870533811}
   - component: {fileID: 870533812}
   - component: {fileID: 870533813}
+  - component: {fileID: 870533814}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -4698,7 +4699,6 @@ MonoBehaviour:
   PartialCrashed: 0
   StartGoingBackwards: 0
   StartGoingForwards: 0
-  HorrizontalCollider: {fileID: 1468699926}
   DectectingDistance: 1.31
   NewPoz_RotZ: 0
   Current_RotZ: 0
@@ -5072,6 +5072,19 @@ PolygonCollider2D:
       - {x: 1.525, y: -1.895}
       - {x: 1.535, y: -1.8449999}
   m_UseDelaunayMesh: 0
+--- !u!114 &870533814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870533807}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dfa8d61f320678d1ba71c921cc71925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResetCar
+  Car: {fileID: 0}
 --- !u!1 &871180128
 GameObject:
   m_ObjectHideFlags: 0
