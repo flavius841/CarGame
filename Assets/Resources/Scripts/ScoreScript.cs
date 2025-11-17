@@ -13,6 +13,11 @@ public class ScoreScript : MonoBehaviour
     [SerializeField] float MaxAlpha = 1f;
     [SerializeField] bool Tg1Touched;
     [SerializeField] bool Tg2Touched;
+    [SerializeField] bool Tg3Touched;
+    [SerializeField] bool Tg4Touched;
+    [SerializeField] bool Tg5Touched;
+
+
 
     [SerializeField] TextMeshProUGUI ScoreText;
 
@@ -56,6 +61,9 @@ public class ScoreScript : MonoBehaviour
 
         AddScore("Target1", ref Tg1Touched, other);
         AddScore("Target2", ref Tg2Touched, other);
+        AddScore("Target2", ref Tg3Touched, other);
+        AddScore("Target4", ref Tg4Touched, other);
+        AddScore("Target5", ref Tg5Touched, other);
         
 
     }
@@ -99,6 +107,9 @@ public class ScoreScript : MonoBehaviour
 
         Tg1Touched = false;
         Tg2Touched = false;
+        Tg3Touched = false;
+        Tg4Touched = false;
+        Tg5Touched = false;
 
     }
 
