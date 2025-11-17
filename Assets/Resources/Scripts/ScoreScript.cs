@@ -1,14 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ScoreScript : MonoBehaviour
 {
     [SerializeField] int Lifes;
+    [SerializeField] int Score;
     [SerializeField] Image Life1;
     [SerializeField] Image Life2;
     [SerializeField] Image Life3;
     [SerializeField] float MinAlpha = 0.5f;
     [SerializeField] float MaxAlpha = 1f;
+    [SerializeField] bool Tg1Touched;
+    [SerializeField] TextMeshProUGUI ScoreText;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -41,6 +45,13 @@ public class ScoreScript : MonoBehaviour
             }
         }
 
+        if (other.tag == "Target1" && Tg1Touched == false)
+        {
+            Score += 10;
+            Tg1Touched = true;
+            ScoreText.text = "Score: " + Score.ToString();
+        }
+
     }
 
     
@@ -48,6 +59,7 @@ public class ScoreScript : MonoBehaviour
     void Start()
     {
         Lifes = 3;
+        Score = 0;
     }
 
 
@@ -62,6 +74,7 @@ public class ScoreScript : MonoBehaviour
         transform.position = new Vector3(-5.4f, -1.3f, -0.2f);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         Lifes = 3;
+        Score = 0;
 
         Color c = Life1.color;
         c.a = MaxAlpha;
@@ -74,6 +87,8 @@ public class ScoreScript : MonoBehaviour
         c = Life3.color;
         c.a = MaxAlpha;
         Life3.color = c;
+
+        Tg1Touched = false;
 
     }
 }
