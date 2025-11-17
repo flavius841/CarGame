@@ -16,6 +16,7 @@ TagManager:
   - UpTurnUpCollider
   - UpTurnDownColliderLeft
   - Target1
+  - Target2
   layers:
   - Default
   - TransparentFX
