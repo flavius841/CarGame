@@ -11249,7 +11249,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press C to open/close the controls menu
+  m_text: "Press C to open/close the controls menu\n\nPress M to go back to \nthe
+    main menu"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 618f9f25a1b19b5038241bead00762de, type: 2}
   m_sharedMaterial: {fileID: -7177616421474708299, guid: 618f9f25a1b19b5038241bead00762de, type: 2}

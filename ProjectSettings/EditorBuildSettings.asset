@@ -6,7 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Resources/Scenes/Scene1.unity
+    path: Assets/Resources/Scenes/Menu.unity
+    guid: 0e36f64638312bd4d8b171e346a0359c
+  - enabled: 1
+    path: Assets/Resources/Scenes/ParkingLevel.unity
+    guid: ccf57a2925c0e1407a7408ae1c9a4f44
+  - enabled: 1
+    path: Assets/Resources/Scenes/RacingLevel.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

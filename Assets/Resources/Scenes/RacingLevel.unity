@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControlsMenuScrpt
   controlsMenu: {fileID: 2025673559}
-  active: 0
+  active1: 0
 --- !u!4 &121167133
 Transform:
   m_ObjectHideFlags: 0
@@ -1200,7 +1200,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press C to open/close the controls menu
+  m_text: "Press C to open/close the controls menu\n\nPress M to go back to \nthe
+    main menu"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 618f9f25a1b19b5038241bead00762de, type: 2}
   m_sharedMaterial: {fileID: -7177616421474708299, guid: 618f9f25a1b19b5038241bead00762de, type: 2}
@@ -4699,7 +4700,6 @@ MonoBehaviour:
   PartialCrashed: 0
   StartGoingBackwards: 0
   StartGoingForwards: 0
-  DectectingDistance: 1.31
   NewPoz_RotZ: 0
   Current_RotZ: 0
   z: 0

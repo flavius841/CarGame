@@ -2,15 +2,33 @@ using UnityEngine;
 
 public class MenuScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void Scene1Load()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
+
+    public void Scene2Load()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+    public void InvokeScene1Load()
+    {
+        Invoke("Scene1Load", 0.5f);
+    }
+
+    public void InvokeScene2Load()
+    {
+        Invoke("Scene2Load", 0.5f);
     }
 }
