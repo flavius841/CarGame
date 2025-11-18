@@ -26036,6 +26036,7 @@ MonoBehaviour:
   Tg2Touched: 0
   Tg3Touched: 0
   Tg4Touched: 0
+  Tg5Touched: 0
   ScoreText: {fileID: 1350407401}
 --- !u!1 &2057795558
 GameObject:
